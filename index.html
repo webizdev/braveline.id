@@ -1315,7 +1315,6 @@ Chat WhatsApp Sekarang — GRATIS
         settingsData.forEach(item => {
           if (item.key === 'fb_pixel_id' && item.value) {
             fb_pixel_id = item.value;
-            fbq('init', fb_pixel_id);
           }
           if (item.key === 'wa_number' && item.value) waNumber = item.value.replace(/\D/g, '');
           if (item.key === 'wa_default_message' && item.value) waMessage = encodeURIComponent(item.value);
