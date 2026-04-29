@@ -5,9 +5,9 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 // Database Configuration
-$host = 'db';
+$host = 'localhost';
 $db   = 'alilogis_braveline';
-$user = 'alilogis_braveline';
+$user = 'alilogis__FeEg2xDiwlSISzIJmopoCV_8I3QlB-FE';
 $pass = 'eGQG2xvzNsDKbXYFamVT';
 $charset = 'utf8mb4';
 
