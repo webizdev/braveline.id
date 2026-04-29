@@ -7,7 +7,7 @@ header("Content-Type: application/json");
 // Database Configuration
 $host = 'localhost';
 $db   = 'alilogis_braveline';
-$user = 'alilogis__FeEg2xDiwlSISzIJmopoCV_8I3QlB-FE';
+$user = 'alilogis_braveline';
 $pass = 'eGQG2xvzNsDKbXYFamVT';
 $charset = 'utf8mb4';
 
@@ -19,9 +19,9 @@ try {
     ]);
 } catch (\PDOException $e) {
     header("Content-Type: text/html");
-    die("<h2 style='color:red'>Koneksi Database Gagal!</h2>
+    die("<h2 style='color:red'>Gagal Menghubungkan ke Database Hosting!</h2>
          <p>Error: " . $e->getMessage() . "</p>
-         <p><b>Saran:</b> Pastikan Docker sudah running dan jalankan <code>docker-compose up -d</code> di terminal.</p>");
+         <p><b>Saran:</b> Pastikan Username, Password, dan Nama Database di file <code>api.php</code> sudah sesuai dengan yang ada di cPanel/Hosting Anda.</p>");
 }
 
 // AUTO-REPAIR: Ensure Admin Table exists
