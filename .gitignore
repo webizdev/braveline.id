@@ -1,0 +1,7 @@
+mysql_data/
+db_data/
+full_migration.php
+download_assets.php
+credensial.txt
+.DS_Store
+*.log

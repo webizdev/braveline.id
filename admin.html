@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+     <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '767269997378952');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=767269997378952&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braveline Admin - Dashboard</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&family=Nunito:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase SDK -->
+
+    <style>
+        :root {
+            --primary: #ff0000;
+            --secondary: #ffcc00;
+            --bg-dark: #0a0a0a;
+            --bg-card: #141414;
+            --bg-input: #1f1f1f;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border: #2a2a2a;
+            --radius: 8px;
+            --sidebar-width: 260px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-text {
+            font-family: 'Barlow Condensed', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Login Screen */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-card img {
+            width: 80px;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-card h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            width: 100%;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .btn:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Layout */
+        #admin-app {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            height: 100vh;
+        }
+
+        aside {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow: hidden;
+            /* Ensure nav handles the scroll */
+            height: 100vh;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .brand span {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        nav {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            min-height: 0;
+            /* Critical flexbox scroll fix */
+        }
+
+        nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-item i {
+            width: 18px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--bg-input);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            border-left: 3px solid var(--primary);
+        }
+
+        main {
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+        }
+
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.8rem;
+            border-radius: var(--radius);
+        }
+
+        /* Image Uploader */
+        .img-upload-box {
+            border: 2px dashed var(--border);
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            background: var(--bg-input);
+        }
+
+        .img-upload-box:hover {
+            border-color: var(--primary);
+        }
+
+        .img-upload-preview {
+            max-width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .status-ok {
+            background: #00ff8822;
+            color: #00ff88;
+            border: 1px solid #00ff8844;
+        }
+
+        .status-warn {
+            background: #ffcc0022;
+            color: #ffcc00;
+            border: 1px solid #ffcc0044;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            transform: translateY(100px);
+            transition: var(--transition);
+            z-index: 2000;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+        }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 70px;
+            }
+
+            aside {
+                padding: 1.5rem 0;
+                /* Remove horizontal padding to save space */
+                align-items: stretch;
+                /* Keep children full width */
+            }
+
+            .brand {
+                justify-content: center;
+                padding-bottom: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .brand span {
+                display: none;
+            }
+
+            .nav-item {
+                padding: 1.2rem 0.5rem;
+                justify-content: center;
+                gap: 0;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-item i {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* Main content padding adj */
+            main {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-overlay">
+        <div class="login-card">
+            <div class="brand-text"
+                style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 1rem;">BRAVELINE</div>
+            <h2>ADMIN ACCESS</h2>
+            <div class="input-group">
+                <label>Dashboard Password</label>
+                <input type="password" id="admin-password" placeholder="Masukkan password"
+                    onkeypress="if(event.key==='Enter') attemptLogin()">
+            </div>
+            <button class="btn" onclick="attemptLogin()">ENTER DASHBOARD</button>
+            <p id="error-msg" style="color: var(--primary); margin-top: 1rem; font-size: 0.85rem;" class="hidden">
+                Invalid Password. Please try again.</p>
+        </div>
+    </div>
+
+    <!-- MAIN APP STRUCTURE -->
+    <div id="admin-app" class="hidden">
+        <aside>
+            <div class="brand">
+                <span class="brand-text">BRAVELINE</span>
+            </div>
+            <nav id="sidebar-nav">
+                <div class="nav-item active" onclick="showSection('dashboard')"><i data-lucide="home"></i>
+                    <span>Dashboard</span></div>
+                <div class="nav-item" onclick="showSection('panduan')"><i data-lucide="book-open"></i> <span>Panduan
+                        Penggunaan</span></div>
+                <div class="nav-item" onclick="showSection('hero')"><i data-lucide="layout-template"></i> <span>Seksi
+                        Hero</span></div>
+                <div class="nav-item" onclick="showSection('trustbar')"><i data-lucide="shield-check"></i> <span>Trust
+                        Bar</span></div>
+                <div class="nav-item" onclick="showSection('usp')"><i data-lucide="star"></i> <span>Seksi USP</span>
+                </div>
+                <div class="nav-item" onclick="showSection('harga')"><i data-lucide="tag"></i> <span>Seksi Harga</span>
+                </div>
+                <div class="nav-item" onclick="showSection('katalog')"><i data-lucide="image"></i> <span>Seksi
+                        Katalog</span></div>
+                <div class="nav-item" onclick="showSection('kategori')"><i data-lucide="filter"></i> <span>Kategori
+                        Katalog</span></div>
+                <div class="nav-item" onclick="showSection('carousel')"><i data-lucide="repeat"></i> <span>Carousel
+                        Foto</span></div>
+                <div class="nav-item" onclick="showSection('testimonial')"><i data-lucide="message-square"></i>
+                    <span>Testimonial</span></div>
+                <div class="nav-item" onclick="showSection('proses')"><i data-lucide="rocket"></i> <span>Cara
+                        Order</span></div>
+                <div class="nav-item" onclick="showSection('regional')"><i data-lucide="map-pin-plus"></i>
+                    <span>Regional</span></div>
+                <div class="nav-item" onclick="showSection('faq')"><i data-lucide="help-circle"></i> <span>Seksi
+                        FAQ</span></div>
+                <div class="nav-item" onclick="showSection('titles')"><i data-lucide="type"></i> <span>Judul & Sub
+                        Seksi</span></div>
+                <div class="nav-item" onclick="showSection('countdown')"><i data-lucide="timer"></i> <span>Countdown
+                        Promo</span></div>
+                <div class="nav-item" onclick="showSection('footer')"><i data-lucide="map-pin"></i> <span>Footer &
+                        Info</span></div>
+                <div style="flex:1"></div>
+                <div class="nav-item" onclick="showSection('settings')"><i data-lucide="settings"></i> <span>Pengaturan
+                        Global</span></div>
+                <div class="nav-item" onclick="logout()" style="color: var(--primary)"><i data-lucide="log-out"></i>
+                    <span>Logout</span></div>
+            </nav>
+        </aside>
+
+        <main id="main-content">
+            <!-- DASHBOARD HOME -->
+            <section id="sec-dashboard" class="content-sec">
+                <div class="header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p style="color: var(--text-muted)">Welcome back, Admin Braveline!</p>
+                    </div>
+                    <div class="user-info">
+                        <a href="index.html" target="_blank"
+                            style="color: var(--secondary); text-decoration: none; font-weight: 700;">Lihat Website
+                            &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--secondary);">
+                    <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;"><i
+                            data-lucide="info" style="color: var(--secondary)"></i> Panduan Penggunaan</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
+                        <div style="text-align: center">
+                            <div style="font-weight: 800; font-size: 1.2rem; color: var(--secondary)">01. LOGIN</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted)">Akses dashboard via password</div>
+                        </div>
+                        <div style="text-align: center">
+                            <div style="font-weight: 800; font-size: 1.2rem; color: var(--text-muted)">02. PILIH SEKSI
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted)">Gunakan sidebar di kiri</div>
+                        </div>
+                        <div style="text-align: center">
+                            <div style="font-weight: 800; font-size: 1.2rem; color: var(--text-muted)">03. EDIT KONTEN
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted)">Ubah teks atau gambar</div>
+                        </div>
+                        <div style="text-align: center">
+                            <div style="font-weight: 800; font-size: 1.2rem; color: var(--text-muted)">04. SIMPAN</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted)">Data terupdate real-time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 1rem;">Status Konten</h3>
+                <div class="grid">
+                    <div class="card status-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center">
+                            <div style="font-weight: 700">Hero Section</div>
+                            <span class="status-badge status-ok">AKTIF</span>
+                        </div>
+                    </div>
+                    <div class="card status-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center">
+                            <div style="font-weight: 700">Katalog Produk</div>
+                            <span class="status-badge status-ok">12 ITEMS</span>
+                        </div>
+                    </div>
+                    <div class="card status-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center">
+                            <div style="font-weight: 700">FAQ</div>
+                            <span class="status-badge status-warn">Bantu Isi</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANDUAN SECTION -->
+            <section id="sec-panduan" class="content-sec hidden">
+                <div class="header">
+                    <h1>Panduan Penggunaan Dashboard</h1>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--secondary); margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--secondary);">📖 Cara Memulai</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Dashboard ini terhubung langsung ke database
+                        Supabase. Setiap perubahan yang Anda simpan akan langsung tampil di website Braveline secara
+                        real-time.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🔐</div>
+                        <h3>1. Login & Keamanan</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Masukkan password untuk akses dashboard.</li>
+                            <li>Session aktif selama 24 jam.</li>
+                            <li>Ganti password di menu <b>Pengaturan → Keamanan</b>.</li>
+                            <li>Klik <b>Logout</b> di sidebar untuk keluar.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">✏️</div>
+                        <h3>2. Edit Teks & Konten</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Pilih seksi di sidebar kiri (misalnya <b>Seksi Hero</b>).</li>
+                            <li>Ubah isian teks sesuai kebutuhan.</li>
+                            <li>Klik tombol <b>SIMPAN</b> untuk menyimpan perubahan.</li>
+                            <li>Perubahan langsung tampil di website.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">🖼️</div>
+                        <h3>3. Upload Foto</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Klik kotak foto untuk memilih gambar dari komputer.</li>
+                            <li>Foto otomatis dikompres (max 800×800px, format WebP).</li>
+                            <li>Mendukung JPG, PNG, dan WebP.</li>
+                            <li>Berlaku di Katalog, Carousel, dan Testimonial.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">📋</div>
+                        <h3>4. Tambah / Hapus Data</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Klik tombol <b>+ Tambah</b> untuk menambah item baru.</li>
+                            <li>Klik tombol <b>EDIT</b> pada item untuk mengubahnya.</li>
+                            <li>Klik tombol <b>HAPUS</b> untuk menghapus item (tidak bisa dikembalikan).</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">⚙️</div>
+                        <h3>5. Pengaturan Global</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li><b>Site Title</b> — nama website di tab browser.</li>
+                            <li><b>WhatsApp</b> — nomor WA untuk tombol order.</li>
+                            <li><b>Footer</b> — tagline, deskripsi, alamat, IG, TikTok.</li>
+                            <li>Setelah ubah, klik <b>SIMPAN SETTINGS</b>.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;">💡</div>
+                        <h3>6. Tips Penting</h3>
+                        <ul
+                            style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-top: 0.5rem;">
+                            <li>Gunakan <b>Urutan (Angka)</b> untuk mengatur urutan tampil item.</li>
+                            <li>Angka urutan lebih kecil = tampil lebih awal.</li>
+                            <li>Centang <b>Unggulan</b> pada paket harga untuk highlight khusus.</li>
+                            <li>Gunakan <b>Lihat Website &rarr;</b> di header untuk preview hasil.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HERO SECTION EDITOR -->
+            <section id="sec-hero" class="content-sec hidden">
+                <div class="header">
+                    <h1>Edit Seksi Hero</h1>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Hero Badge</label>
+                        <input type="text" id="hero_badge" data-key="hero_badge">
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Baris 1 (Paling Atas)</label>
+                        <input type="text" id="hero_title1" data-key="hero_title1">
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Baris 2 (Tengah - Warna Tema)</label>
+                        <input type="text" id="hero_title2" data-key="hero_title2">
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Baris 3 (Bawah)</label>
+                        <input type="text" id="hero_title3" data-key="hero_title3">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle / Deskripsi Hero</label>
+                        <textarea id="hero_subtitle" rows="3" data-key="hero_subtitle"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Promo Text (Kecil di atas tombol)</label>
+                            <input type="text" id="hero_promo_text" data-key="hero_promo_text">
+                        </div>
+                        <div class="form-group">
+                            <label>Label Tombol WA</label>
+                            <input type="text" id="hero_action_wa" data-key="hero_action_wa">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Label Tombol Katalog</label>
+                        <input type="text" id="hero_action_catalog" data-key="hero_action_catalog">
+                    </div>
+                    <button class="btn" onclick="saveHeroData()">SIMPAN PERUBAHAN HERO</button>
+                </div>
+            </section>
+
+            <!-- TRUST BAR SECTION -->
+            <section id="sec-trustbar" class="content-sec hidden">
+                <div class="header">
+                    <h1>Trust Bar</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('trustbar')">+
+                        Tambah Item</button>
+                </div>
+
+                <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--secondary);">
+                    <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; margin: 0;">
+                            <label>Kecepatan Animasi Marquee (Detik)</label>
+                            <input type="number" id="trustbar-speed" placeholder="Contoh: 20" min="1" max="100">
+                        </div>
+                        <button class="btn" style="width: auto; padding: 0.8rem 2rem;"
+                            onclick="saveTrustBarSpeed()">SIMPAN KECEPATAN</button>
+                    </div>
+                </div>
+
+                <div id="trustbar-list" class="grid">
+                    <!-- Trust bar items will load here -->
+                </div>
+            </section>
+
+            <!-- USP SECTION -->
+            <section id="sec-usp" class="content-sec hidden">
+                <div class="header">
+                    <h1>Sejarah / USP Cards</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('usp')">+ Tambah
+                        USP</button>
+                </div>
+                <div id="usp-list" class="grid">
+                    <!-- Cards will load here -->
+                </div>
+            </section>
+
+            <!-- PRICING SECTION -->
+            <section id="sec-harga" class="content-sec hidden">
+                <div class="header">
+                    <h1>Paket Harga</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('harga')">+
+                        Tambah Paket</button>
+                </div>
+                <div id="harga-list" class="grid">
+                    <!-- Pricing cards load here -->
+                </div>
+            </section>
+
+            <!-- KATALOG SECTION -->
+            <section id="sec-katalog" class="content-sec hidden">
+                <div class="header">
+                    <h1>Katalog Produk</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('katalog')">+
+                        Tambah Produk</button>
+                </div>
+                <div id="katalog-list" class="grid">
+                    <!-- Products load here -->
+                </div>
+            </section>
+
+            <!-- KATEGORI SECTION -->
+            <section id="sec-kategori" class="content-sec hidden">
+                <div class="header">
+                    <h1>Kategori Katalog</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('kategori')">+
+                        Tambah Kategori</button>
+                </div>
+                <div id="kategori-list" class="grid">
+                    <!-- Categories load here -->
+                </div>
+            </section>
+
+            <!-- CAROUSEL SECTION -->
+            <section id="sec-carousel" class="content-sec hidden">
+                <div class="header">
+                    <h1>Carousel Foto (Slider)</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('carousel')">+
+                        Foto Baru</button>
+                </div>
+                <div id="carousel-list" class="grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                    <!-- Carousel images load here -->
+                </div>
+            </section>
+
+            <!-- TESTIMONIAL SECTION -->
+            <section id="sec-testimonial" class="content-sec hidden">
+                <div class="header">
+                    <h1>Testimonials</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('testimonial')">+
+                        Testi Baru</button>
+                </div>
+                <div id="testimonial-list" class="grid">
+                    <!-- Testimonials load here -->
+                </div>
+            </section>
+
+            <!-- FAQ SECTION -->
+            <section id="sec-faq" class="content-sec hidden">
+                <div class="header">
+                    <h1>Seksi FAQ</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('faq')">+ FAQ
+                        Baru</button>
+                </div>
+                <div id="faq-list">
+                    <!-- FAQ items load here -->
+                </div>
+            </section>
+
+            <!-- CARA ORDER SECTION -->
+            <section id="sec-proses" class="content-sec hidden">
+                <div class="header">
+                    <h1>Cara Order / Alur Proses</h1>
+                    <button class="btn" style="width: auto; padding: 0.5rem 1.5rem" onclick="openModal('proses')">+
+                        Tambah Langkah</button>
+                </div>
+                <div id="proses-list">
+                    <!-- Steps load here -->
+                </div>
+            </section>
+
+            <!-- REGIONAL SECTION -->
+            <section id="sec-regional" class="content-sec hidden">
+                <div class="header">
+                    <h1>Seksi Regional (Bandung & Kalimantan)</h1>
+                </div>
+                <div class="card" style="border-left: 4px solid #25D366; margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">💡 Atur teks untuk section "Kabar Gembira"
+                        yang menampilkan kehadiran Braveline di Bandung dan Kalimantan, beserta tombol WhatsApp
+                        masing-masing.</p>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Teks Utama Section</h3>
+                    <div class="form-group">
+                        <label>Badge Text (Label Kecil Atas)</label>
+                        <input type="text" id="regional_badge" data-key="regional_badge" placeholder="🎉 Kabar Gembira">
+                    </div>
+                    <div class="form-group">
+                        <label>Judul Baris 1</label>
+                        <input type="text" id="regional_title1" data-key="regional_title1"
+                            placeholder="Kabar Gembira Buat Kamu">
+                    </div>
+                    <div class="form-group">
+                        <label>Judul Baris 2</label>
+                        <input type="text" id="regional_title2" data-key="regional_title2"
+                            placeholder="di Bandung dan Kalimantan!">
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi Lengkap</label>
+                        <textarea id="regional_desc" data-key="regional_desc" rows="3"
+                            placeholder="Saat ini Braveline sudah hadir lebih dekat untukmu! Kamu bisa langsung hubungi admin terdekat..."></textarea>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Tombol WhatsApp — Bandung</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Label Tombol Bandung</label>
+                            <input type="text" id="regional_bdg_label" data-key="regional_bdg_label"
+                                placeholder="Braveline Bandung">
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor WA Bandung (Tampilan)</label>
+                            <input type="text" id="regional_bdg_phone" data-key="regional_bdg_phone"
+                                placeholder="0851-9922-7070">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor WA Bandung (Format Internasional, tanpa +)</label>
+                        <input type="text" id="regional_bdg_wa" data-key="regional_bdg_wa" placeholder="6285199227070">
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Tombol WhatsApp — Kalimantan</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Label Tombol Kalimantan</label>
+                            <input type="text" id="regional_kal_label" data-key="regional_kal_label"
+                                placeholder="Braveline Kalimantan">
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor WA Kalimantan (Tampilan)</label>
+                            <input type="text" id="regional_kal_phone" data-key="regional_kal_phone"
+                                placeholder="0857-8796-1197">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor WA Kalimantan (Format Internasional, tanpa +)</label>
+                        <input type="text" id="regional_kal_wa" data-key="regional_kal_wa" placeholder="6285787961197">
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Catatan Bawah (kecil, di bawah tombol)</label>
+                        <input type="text" id="regional_footnote" data-key="regional_footnote"
+                            placeholder="📍 Melayani seluruh Indonesia — pengiriman ke semua kota">
+                    </div>
+                    <button class="btn" onclick="saveRegionalData()">SIMPAN PERUBAHAN REGIONAL</button>
+                </div>
+            </section>
+
+            <!-- COUNTDOWN SECTION -->
+            <section id="sec-countdown" class="content-sec hidden">
+                <div class="header">
+                    <h1>Countdown Promo</h1>
+                    <button class="btn" onclick="saveCountdown()">SIMPAN COUNTDOWN</button>
+                </div>
+                <div class="card">
+                    <div class="form-group"><label>Label Promo</label><input type="text" id="cd-label-inp"></div>
+                    <div class="form-group"><label>Waktu Berakhir</label><input type="datetime-local" id="cd-end-inp">
+                    </div>
+                    <div class="form-group"><label>Status</label><select id="cd-show-inp">
+                            <option value="true">Aktif</option>
+                            <option value="false">Nonaktif</option>
+                        </select></div>
+                </div>
+            </section>
+
+            <!-- SECTION TITLES & SUBTITLES -->
+            <section id="sec-titles" class="content-sec hidden">
+                <div class="header">
+                    <h1>Judul & Sub-Judul Seksi</h1>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Seksi Keunggulan (USP)</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_usp_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_usp_sub"
+                                rows="2"></textarea></div>
+                    </div>
+                    <div class="card">
+                        <h3>Seksi Paket Harga</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_harga_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_harga_sub"
+                                rows="2"></textarea></div>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border)">
+                            <label style="color: var(--secondary)">Promo Harga (Kecil di bawah judul)</label>
+                            <div class="form-group"><label>Judul Promo</label><input type="text"
+                                    data-key="harga_promo_title"></div>
+                            <div class="form-group"><label>Deskripsi Promo</label><input type="text"
+                                    data-key="harga_promo_desc"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Seksi Cara Order</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_proses_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_proses_sub"
+                                rows="2"></textarea></div>
+                    </div>
+                    <div class="card">
+                        <h3>Seksi Testimonial</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_testi_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_testi_sub"
+                                rows="2"></textarea></div>
+                    </div>
+                    <div class="card">
+                        <h3>Carousel Foto Slider</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_carousel_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_carousel_sub"
+                                rows="2"></textarea></div>
+                    </div>
+                    <div class="card">
+                        <h3>Seksi FAQ</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text"
+                                data-key="section_faq_title"></div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_faq_sub"
+                                rows="2"></textarea></div>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--primary)">
+                        <h3>Seksi CTA Akhir (Bawah)</h3>
+                        <div class="form-group"><label>Judul Utama</label><input type="text" data-key="cta_final_title">
+                        </div>
+                        <div class="form-group"><label>Sub-Judul</label><textarea data-key="cta_final_sub"
+                                rows="2"></textarea></div>
+                        <div class="form-group"><label>Label Tombol CTA</label><input type="text"
+                                data-key="cta_final_btn"></div>
+                    </div>
+                </div>
+                <button class="btn" style="margin-top: 1rem" onclick="saveSectionTitles()">SIMPAN SEMUA JUDUL
+                    SEKSI</button>
+            </section>
+
+            <!-- FOOTER & INFO SECTION -->
+            <section id="sec-footer" class="content-sec hidden">
+                <div class="header">
+                    <h1>Footer & Info Kontak</h1>
+                </div>
+                <div class="card">
+                    <div class="form-group"><label>Tagline Footer (Di bawah logo)</label><input type="text"
+                            id="footer_tagline" data-key="footer_tagline"></div>
+                    <div class="form-group"><label>Deskripsi Singkat Footer</label><textarea id="footer_description"
+                            data-key="footer_description" rows="3"></textarea></div>
+                    <div class="form-group"><label>Alamat Lengkap (Tampil di footer)</label><textarea
+                            id="footer_address" data-key="footer_address" rows="3"></textarea></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Nomor WhatsApp (Tampilan)</label><input type="text"
+                                id="footer_phone" data-key="footer_phone" placeholder="0812-3456-7890"></div>
+                        <div class="form-group"><label>Jam Operasional</label><input type="text" id="footer_jam"
+                                data-key="footer_jam" placeholder="Senin - Sabtu: 09:00 - 18:00"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Jam Operasional Footer (Detail)</label>
+                        <input type="text" id="footer_operational_hours" data-key="footer_operational_hours"
+                            placeholder="Produksi & Admin: Senin - Sabtu (08.00 - 17.00)">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Instagram URL</label><input type="text" id="footer_ig"
+                                data-key="footer_ig"></div>
+                        <div class="form-group"><label>TikTok URL</label><input type="text" id="footer_tiktok"
+                                data-key="footer_tiktok"></div>
+                    </div>
+                    <button class="btn" onclick="saveFooterData()">SIMPAN INFO FOOTER</button>
+                </div>
+            </section>
+
+
+            <!-- SETTINGS SECTION -->
+            <section id="sec-settings" class="content-sec hidden">
+                <div class="header">
+                    <h1>Pengaturan Global</h1>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3>Informasi Situs</h3>
+                        <div class="form-group"><label>Site Title</label><input type="text" id="site_title"
+                                data-key="site_title"></div>
+                        <div class="form-group"><label>WhatsApp Number (tanpa +)</label><input type="text"
+                                id="wa_number" data-key="wa_number" placeholder="628123..."></div>
+                        <div class="form-group"><label>Tema Warna Website</label>
+                            <select id="site_theme_color" data-key="site_theme_color"
+                                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-input); color: var(--text-main); font-family: inherit;">
+                                <option value="merah">Merah (Default)</option>
+                                <option value="biru">Biru Ocean</option>
+                                <option value="hijau">Hijau Forest</option>
+                                <option value="ungu">Ungu Night</option>
+                                <option value="gold">Gold Luxury</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Meta Pixel ID (15 Digit)</label>
+                            <input type="text" id="meta_pixel_id" data-key="meta_pixel_id"
+                                placeholder="Contoh: 767269997378952"
+                                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-input); color: var(--text-main); font-family: inherit;">
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 5px;">Jika Anda hanya
+                                memiliki ID Pixel, masukkan di sini.</p>
+                        </div>
+                        <div class="form-group"><label>Atau: Kode Meta Pixel (Full Script)</label>
+                            <textarea id="meta_pixel_code" data-key="meta_pixel_code" rows="5"
+                                placeholder="<!-- Meta Pixel Code -->&#10;<script>...</script>&#10;<noscript>...</noscript>"
+                                style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-input); color: var(--text-main); font-family: monospace; resize: vertical;"></textarea>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 5px;">Gunakan kolom ini
+                                jika ingin menempelkan <b>seluruh kode</b> (biasanya dari Google Tag Manager atau custom
+                                script).</p>
+                        </div>
+                        <button class="btn" style="margin-top: 1rem" onclick="saveGlobalSettings()">SIMPAN
+                            SETTINGS</button>
+                    </div>
+                    <div class="card">
+                        <h3>Keamanan Dashboard</h3>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Ganti password
+                            dashboard Anda secara berkala.</p>
+                        <div class="form-group"><label>Password Baru</label><input type="password" id="new-password"
+                                placeholder="Min. 4 karakter"></div>
+                        <button class="btn" style="background: var(--secondary); color: black"
+                            onclick="changeDashboardPassword()">UPDATE PASSWORD</button>
+                    </div>
+                    <div class="card">
+                        <h3>Logo Website</h3>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Direkomendasikan
+                            format PNG transparan, rasio 3:1.</p>
+                        <div class="img-upload-box" onclick="document.getElementById('logo-inp').click()"
+                            style="padding: 1rem;">
+                            <input type="file" id="logo-inp" accept="image/*" class="hidden"
+                                onchange="previewAsset(this, 'logo-preview', 'logo-status')">
+                            <p id="logo-status" style="font-size: 0.8rem; color: var(--text-muted);">Klik untuk pilih
+                                logo</p>
+                            <img id="logo-preview" class="img-upload-preview"
+                                style="height: 80px; object-fit: contain;">
+                        </div>
+                        <button class="btn" style="margin-top: 1rem;"
+                            onclick="uploadAsset('logo-inp', 'site_logo_url')">UPLOAD LOGO</button>
+                    </div>
+                    <div class="card">
+                        <h3>Favicon Website</h3>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 1rem;">Format ICO atau
+                            PNG, ukuran 32×32px atau 64×64px.</p>
+                        <div class="img-upload-box" onclick="document.getElementById('fav-inp').click()"
+                            style="padding: 1rem;">
+                            <input type="file" id="fav-inp" accept="image/*" class="hidden"
+                                onchange="previewAsset(this, 'fav-preview', 'fav-status')">
+                            <p id="fav-status" style="font-size: 0.8rem; color: var(--text-muted);">Klik untuk pilih
+                                favicon</p>
+                            <img id="fav-preview" class="img-upload-preview" style="height: 64px; object-fit: contain;">
+                        </div>
+                        <button class="btn" style="margin-top: 1rem;"
+                            onclick="uploadAsset('fav-inp', 'site_favicon_url')">UPLOAD FAVICON</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODAL CRUD -->
+            <div id="crud-modal" class="hidden"
+                style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1500; display: flex; align-items: center; justify-content: center;">
+                <div class="card" style="width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+                    <div class="header" style="margin-bottom: 1rem;">
+                        <h2 id="modal-title">Edit Item</h2>
+                        <button onclick="closeModal()"
+                            style="background: none; border: none; color: white; cursor: pointer;"><i
+                                data-lucide="x"></i></button>
+                    </div>
+                    <form id="modal-form">
+                        <input type="hidden" id="modal-id">
+                        <div id="modal-fields"></div>
+                        <button type="submit" class="btn" style="margin-top: 1rem;">SIMPAN DATA</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast">Changes saved successfully!</div>
+
+    <script>
+    const supabase = {
+    createClient: (url, key) => ({
+      from: (table) => {
+        let query = { table, params: {} };
+        const buildUrl = (q) => {
+          let u = `api.php?table=${q.table}`;
+          if (q.params.id) u += `&id=${q.params.id}`;
+          return u;
+        };
+        const chain = {
+          select: () => chain,
+          eq: (col, val) => { query.params.id = val; return chain; },
+          order: (col, opts) => { query.params.order = col; query.params.dir = opts.ascending ? 'ASC' : 'DESC'; return chain; },
+          limit: () => chain,
+          single: () => { query.params.single = true; return chain; },
+          then: async (resolve) => {
+            const url = `http://localhost:8080/api.php?action=get&table=${query.table}` + 
+                        (query.params.id ? `&id=${query.params.id}` : '') +
+                        (query.params.order ? `&order=${query.params.order}&dir=${query.params.dir}` : '') +
+                        (query.params.single ? `&single=1` : '');
+            const res = await fetch(url);
+            const data = await res.json();
+            resolve({ data, error: data.error || null });
+          },
+          insert: async (rows) => {
+            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(rows)
+            });
+            const data = await res.json();
+            return { data, error: data.error || null };
+          },
+          upsert: async (rows) => {
+            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(rows)
+            });
+            const data = await res.json();
+            return { data, error: data.error || null };
+          },
+          update: async (row) => {
+            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}&id=${query.params.id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(row)
+            });
+            const data = await res.json();
+            return { data, error: data.error || null };
+          },
+          delete: async () => {
+            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}&id=${query.params.id}`, {
+                method: 'DELETE'
+            });
+            const data = await res.json();
+            return { data, error: data.error || null };
+          }
+        };
+        return chain;
+      },
+      rpc: async (fn, params) => {
+        const res = await fetch(`http://localhost:8080/api.php?action=rpc&fn=${fn}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        });
+        const data = await res.json();
+        return { data, error: data.error || null };
+      },
+      storage: {
+        from: (bucket) => ({
+            upload: async (path, file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                const res = await fetch(`api.php?action=upload&bucket=${bucket}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                return { data, error: data.error || null };
+            },
+            getPublicUrl: (path) => {
+                // In local version, the upload return contains the publicUrl already
+                // This is a dummy for compatibility
+                return { data: { publicUrl: path } };
+            }
+        })
+      }
+    })
+  };
+
+  const SUPABASE_URL = 'http://localhost:8080';
+  const SUPABASE_ANON_KEY = 'local-api-key';
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const sb = supabaseClient;
+
+  // AUTH LOGIC
+   async function attemptLogin() {
+    const passwordInput = document.getElementById('admin-password');
+    const password = passwordInput.value.trim();
+    const errorMsg = document.getElementById('error-msg');
+    const btn = document.querySelector('#login-overlay .btn');
+
+    if (!password) return;
+    btn.innerText = 'VERIFYING...';
+    btn.disabled = true;
+    errorMsg.classList.add('hidden');
+
+    try {
+      console.log('Attempting login with password:', password);
+      const { data: isValid, error } = await sb.rpc('verify_admin_password', { password_to_check: password });
+      
+      if (error) {
+          console.error('Login RPC Error:', error);
+          alert('Database Error: ' + error);
+          return;
+      }
+
+      console.log('Login result from API:', isValid);
+      if (isValid === true || isValid === "true") {
+        localStorage.setItem('brv_rev_auth', 'true');
+        confirmAuth();
+      } else {
+        errorMsg.innerText = 'Password salah. Silakan coba lagi.';
+        errorMsg.classList.remove('hidden');
+      }
+    } catch (err) {
+      console.error('Fetch Error:', err);
+      alert('Koneksi Gagal: ' + err.message);
+    } finally {
+      btn.innerText = 'ENTER DASHBOARD';
+      btn.disabled = false;
+    }
+  }
+
+
+        function confirmAuth() {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('admin-app').classList.remove('hidden');
+            lucide.createIcons();
+            loadInitialData();
+        }
+
+        function logout() {
+            localStorage.removeItem('brv_rev_auth');
+            location.reload();
+        }
+
+        // NAVIGATION
+        function showSection(id) {
+            document.querySelectorAll('.content-sec').forEach(s => s.classList.add('hidden'));
+            document.getElementById('sec-' + id).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick')?.includes(id)) {
+                    item.classList.add('active');
+                }
+            });
+
+            if (id === 'trustbar') loadTrustBar();
+            if (id === 'usp') loadUSP();
+            if (id === 'harga') loadHarga();
+            if (id === 'katalog') loadKatalog();
+            if (id === 'kategori') loadKategori();
+            if (id === 'carousel') loadCarousel();
+            if (id === 'testimonial') loadTestimonial();
+            if (id === 'faq') loadFAQ();
+            if (id === 'proses') loadProses();
+            if (id === 'countdown') loadCountdown();
+            if (id === 'regional') loadRegionalData();
+            if (id === 'titles') loadInitialData(); // Just refresh data from Supabase
+        }
+
+        // DATA LOADING
+        async function loadInitialData() {
+            const { data: heroData } = await sb.from('brv_rev_hero').select('*');
+            if (heroData) {
+                heroData.forEach(item => {
+                    const el = document.querySelector(`[data-key="${item.key}"]`);
+                    if (el) el.value = item.value;
+                });
+            }
+            const { data: settingsData } = await sb.from('brv_rev_site_settings').select('*');
+            if (settingsData) {
+                settingsData.forEach(item => {
+                    const el = document.querySelector(`[data-key="${item.key}"]`);
+                    if (el) el.value = item.value;
+                });
+            }
+        }
+
+        // --- MODULE LOGICS ---
+
+        async function loadCarousel() {
+            const { data } = await sb.from('brv_rev_carousel').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('carousel-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card" style="padding: 0; position: relative">
+                    <img src="${item.image_url}" style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius)">
+                    <div style="padding: 0.5rem; display: flex; justify-content: space-between">
+                        <span>#${item.urutan}</span>
+                        <button onclick="deleteItem('carousel', '${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer;"><i data-lucide="trash-2"></i></button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada foto.</p>';
+            lucide.createIcons();
+        }
+
+        async function loadTestimonial() {
+            const { data } = await sb.from('brv_rev_testimonials').select('*').order('created_at', { ascending: false });
+            const list = document.getElementById('testimonial-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card">
+                    <div style="margin-bottom: 0.75rem;">
+                        <h4 style="font-size: 1.1rem; margin:0 0 0.2rem;">${item.nama}</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin:0">${item.jabatan_perusahaan || ''}</p>
+                    </div>
+                    <p style="font-size: 0.9rem; font-style: italic;">"${item.pesan}"</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('testimonial', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('testimonial', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada testimonial.</p>';
+        }
+
+        async function loadFAQ() {
+            const { data } = await sb.from('brv_rev_faq').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('faq-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between">
+                        <strong>Q: ${item.pertanyaan}</strong>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="editItem('faq', '${item.id}')" style="background: none; border: none; color: var(--text-muted); cursor: pointer;"><i data-lucide="edit-3"></i></button>
+                            <button onclick="deleteItem('faq', '${item.id}')" style="background: none; border: none; color: var(--primary); cursor: pointer;"><i data-lucide="trash-2"></i></button>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem;">A: ${item.jawaban}</p>
+                </div>
+            `).join('') || '<p>Belum ada FAQ.</p>';
+            lucide.createIcons();
+        }
+
+        // --- MODULE LOGICS ---
+
+        async function loadTrustBarSpeed() {
+            try {
+                const { data } = await sb.from('brv_rev_site_settings').select('value').eq('key', 'trust_bar_speed').single();
+                if (data && data.value) {
+                    document.getElementById('trustbar-speed').value = data.value;
+                }
+            } catch (e) { console.error('Error load speed', e); }
+        }
+
+        async function saveTrustBarSpeed() {
+            const speed = document.getElementById('trustbar-speed').value;
+            if (!speed) return alert('Masukkan kecepatan!');
+
+            const btn = document.querySelector('button[onclick="saveTrustBarSpeed()"]');
+            btn.textContent = "Menyimpan...";
+
+            const { error } = await sb.from('brv_rev_site_settings').upsert({ key: 'trust_bar_speed', value: speed });
+
+            btn.textContent = "SIMPAN KECEPATAN";
+            if (error) alert('Gagal menyimpan kecepatan: ' + error.message);
+            else alert('Kecepatan berhasil disimpan');
+        }
+
+        async function loadTrustBar() {
+            loadTrustBarSpeed();
+            const { data } = await sb.from('brv_rev_trust_bar').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('trustbar-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${item.icon}</div>
+                    <h3 style="margin-bottom: 0.5rem;">${item.highlight_text}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">${item.description_text}</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('trustbar', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('trustbar', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada data.</p>';
+            lucide.createIcons();
+        }
+
+        async function loadUSP() {
+            const { data } = await sb.from('brv_rev_usp_cards').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('usp-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">${item.icon}</div>
+                    <h3>${item.title}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; height: 3rem; overflow: hidden;">${item.description}</p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('usp', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('usp', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada data.</p>';
+        }
+
+        async function loadHarga() {
+            const { data } = await sb.from('brv_rev_harga_paket').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('harga-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card" style="${item.is_featured ? 'border-color: var(--secondary); box-shadow: 0 0 10px rgba(255,204,0,0.2)' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.5rem">${item.nama_paket}</h3>
+                        ${item.badge_text ? `<span class="status-badge status-ok">${item.badge_text}</span>` : ''}
+                    </div>
+                    <div style="font-size: 1.8rem; font-weight: 900; color: var(--text-main);">Rp ${parseInt(item.harga_ecer).toLocaleString()}<span style="font-size: 0.9rem; font-weight: 400; color: var(--text-muted)">${item.satuan_ecer}</span></div>
+                    <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem;">Lusin: Rp ${parseInt(item.harga_lusin).toLocaleString()}${item.satuan_lusin}</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('harga', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('harga', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada paket.</p>';
+        }
+
+        async function loadKatalog() {
+            const { data } = await sb.from('brv_rev_katalog').select('*').order('created_at', { ascending: false });
+            const list = document.getElementById('katalog-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <img src="${item.image_url}" style="width: 100%; height: 250px; object-fit: cover;">
+                    <div style="padding: 1rem;">
+                        <div style="display: flex; justify-content: space-between">
+                            <h3 style="font-size: 1.2rem">${item.nama_produk}</h3>
+                            <span style="color: var(--primary); font-weight: 900;">${item.tag_promo || ''}</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">${item.kategori} ${item.marketplace_link ? '<span style="color: var(--secondary);">🔗</span>' : ''}</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('katalog', '${item.id}')">EDIT</button>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('katalog', '${item.id}')">HAPUS</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada produk.</p>';
+        }
+
+        async function loadKategori() {
+            const { data } = await sb.from('brv_rev_kategori').select('*').order('urutan', { ascending: true });
+            const list = document.getElementById('kategori-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${item.emoji || '📁'}</div>
+                    <h3 style="margin-bottom: 0.5rem;">${item.nama}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Kode: ${item.kode_filter} | Urutan: ${item.urutan}</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 10px;">
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--bg-input)" onclick="editItem('kategori', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #330000" onclick="deleteItem('kategori', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada kategori.</p>';
+            lucide.createIcons();
+        }
+
+        async function loadProses() {
+            const { data } = await sb.from('brv_rev_proses_order').select('*').order('nomor', { ascending: true });
+            const list = document.getElementById('proses-list');
+            list.innerHTML = data?.map(item => `
+                <div class="card" style="display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1rem;">
+                    <div style="font-size: 2.5rem; line-height:1; flex-shrink:0;">${item.ikon || '📌'}</div>
+                    <div style="flex:1">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                            <span style="background:var(--primary);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:900;flex-shrink:0;">${item.nomor}</span>
+                            <h3 style="margin:0;font-size:1.1rem;">${item.judul}</h3>
+                        </div>
+                        <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">${item.deskripsi || ''}</p>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-shrink:0;">
+                        <button class="btn" style="padding:5px 10px;font-size:0.75rem;background:var(--bg-input)" onclick="editItem('proses', '${item.id}')">EDIT</button>
+                        <button class="btn" style="padding:5px 10px;font-size:0.75rem;background:#330000" onclick="deleteItem('proses', '${item.id}')">HAPUS</button>
+                    </div>
+                </div>
+            `).join('') || '<p>Belum ada langkah order.</p>';
+        }
+
+        // --- IMAGE COMPRESSION & UPLOAD ---
+
+        async function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => resolve(blob), 'image/webp', 0.8);
+                    };
+                };
+            });
+        }
+
+        async function uploadToSupabase(file, bucket) {
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.webp`;
+            const filePath = `${fileName}`;
+            const compressedBlob = await compressImage(file);
+
+            const { data, error } = await sb.storage.from(bucket).upload(filePath, compressedBlob);
+            if (error) throw error;
+
+            const { data: urlData } = sb.storage.from(bucket).getPublicUrl(filePath);
+            return urlData.publicUrl;
+        }
+
+        // --- CRUD OPERATIONS ---
+
+        async function openModal(type, id = null) {
+            const modal = document.getElementById('crud-modal');
+            const title = document.getElementById('modal-title');
+            const fields = document.getElementById('modal-fields');
+            const form = document.getElementById('modal-form');
+
+            modal.classList.remove('hidden');
+            form.setAttribute('data-type', type);
+            document.getElementById('modal-id').value = id || '';
+
+            let html = '';
+            if (type === 'usp') {
+                title.innerText = id ? 'Edit USP' : 'Tambah USP';
+                html = `
+                    <div class="form-group"><label>Icon (Emoji)</label><input type="text" name="icon" required placeholder="Masukkan password"></div>
+                    <div class="form-group"><label>Judul</label><input type="text" name="title" required></div>
+                    <div class="form-group"><label>Deskripsi</label><textarea name="description" rows="3"></textarea></div>
+                    <div class="form-group"><label>Urutan (Angka)</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'trustbar') {
+                title.innerText = id ? 'Edit Trust Bar' : 'Tambah Trust Bar';
+                html = `
+                    <div class="form-group"><label>Icon (Emoji)</label><input type="text" name="icon" required></div>
+                    <div class="form-group"><label>Highlight Text</label><input type="text" name="highlight_text" required placeholder="PROSES CEPAT"></div>
+                    <div class="form-group"><label>Description</label><input type="text" name="description_text" required placeholder="— Tepat Waktu, Terjamin"></div>
+                    <div class="form-group"><label>Urutan (Angka)</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'harga') {
+                title.innerText = id ? 'Edit Paket' : 'Tambah Paket';
+                html = `
+                    <div class="form-group"><label>Nama Paket</label><input type="text" name="nama_paket" required></div>
+                    <div class="form-group"><label>Badge (opsional)</label><input type="text" name="badge_text" placeholder="Promo / Best Seller"></div>
+                    <div class="form-group"><label>Harga Ecer (Rp)</label><input type="number" name="harga_ecer"></div>
+                    <div class="form-group"><label>Satuan Ecer</label><input type="text" name="satuan_ecer" value="/pcs"></div>
+                    <div class="form-group"><label>Harga Lusin (Rp)</label><input type="number" name="harga_lusin"></div>
+                    <div class="form-group"><label>Satuan Lusin</label><input type="text" name="satuan_lusin" value="/set"></div>
+                    <div class="form-group"><label>Fitur (Satu baris = satu poin)</label><textarea name="fitur_list_raw" rows="6" placeholder="Bahan Dryfit Premium&#10;Full Printing&#10;Bebas Nama & Nomor"></textarea></div>
+                    <div class="form-group"><label>Unggulan?</label><select name="is_featured"><option value="false">Tidak</option><option value="true">Ya</option></select></div>
+                    <div class="form-group"><label>Urutan</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'katalog') {
+                title.innerText = id ? 'Edit Produk' : 'Tambah Produk';
+                html = `
+                    <div class="form-group"><label>Nama Produk</label><input type="text" name="nama_produk" required></div>
+                    <div class="form-group"><label>Kategori</label><select name="kategori" id="katalog-kategori-select"><option value="">Loading...</option></select></div>
+                    <div class="form-group"><label>Tag Promo</label><input type="text" name="tag_promo" placeholder="DISKON 10%"></div>
+                    <div class="form-group"><label>🔗 Link Marketplace</label><input type="url" name="marketplace_link" placeholder="https://shopee.co.id/produk-jersey..."></div>
+                    <div class="form-group"><label>Foto Produk</label>
+                        <div class="img-upload-box" onclick="document.getElementById('file-inp').click()">
+                            <p id="upload-status">Klik untuk Pilih Foto (WebP/JPG)</p>
+                            <input type="file" id="file-inp" accept="image/*" class="hidden" onchange="previewImg(this)">
+                            <img id="preview" class="img-upload-preview">
+                        </div>
+                        <input type="hidden" name="image_url" id="image_url_hidden">
+                    </div>
+                `;
+            } else if (type === 'carousel') {
+                title.innerText = 'Tambah Foto Slider';
+                html = `
+                    <div class="form-group"><label>Foto Slider</label>
+                        <div class="img-upload-box" onclick="document.getElementById('file-inp').click()">
+                            <p id="upload-status">Pilih Foto Carousel</p>
+                            <input type="file" id="file-inp" accept="image/*" class="hidden" onchange="previewImg(this)">
+                            <img id="preview" class="img-upload-preview">
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Urutan</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'kategori') {
+                title.innerText = id ? 'Edit Kategori' : 'Tambah Kategori';
+                html = `
+                    <div class="form-group"><label>Emoji</label><input type="text" name="emoji" placeholder="⚽"></div>
+                    <div class="form-group"><label>Nama Kategori</label><input type="text" name="nama" required placeholder="Futsal/Bola"></div>
+                    <div class="form-group"><label>Kode Filter (Unik)</label><input type="text" name="kode_filter" required placeholder="0, 1, atau nama"></div>
+                    <div class="form-group"><label>Urutan (Angka)</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'testimonial') {
+                title.innerText = id ? 'Edit Testimonial' : 'Tambah Testimonial';
+                html = `
+                    <div class="form-group"><label>Nama Pelanggan</label><input type="text" name="nama" required></div>
+                    <div class="form-group"><label>Jabatan / Komunitas</label><input type="text" name="jabatan_perusahaan" placeholder="Tim Futsal RW – Jakarta"></div>
+                    <div class="form-group"><label>Pesan Testimonial</label><textarea name="pesan" rows="4" required></textarea></div>
+                `;
+            } else if (type === 'faq') {
+                title.innerText = id ? 'Edit FAQ' : 'Tambah FAQ';
+                html = `
+                    <div class="form-group"><label>Pertanyaan</label><input type="text" name="pertanyaan" required></div>
+                    <div class="form-group"><label>Jawaban</label><textarea name="jawaban" rows="4" required></textarea></div>
+                    <div class="form-group"><label>Urutan</label><input type="number" name="urutan" value="0"></div>
+                `;
+            } else if (type === 'proses') {
+                title.innerText = id ? 'Edit Langkah' : 'Tambah Langkah Order';
+                html = `
+                    <div class="form-group"><label>Nomor Urutan</label><input type="number" name="nomor" required></div>
+                    <div class="form-group"><label>Icon (Emoji)</label><input type="text" name="ikon" placeholder="💬"></div>
+                    <div class="form-group"><label>Judul Langkah</label><input type="text" name="judul" required></div>
+                    <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" rows="3"></textarea></div>
+                `;
+            }
+            fields.innerHTML = html;
+
+            if (type === 'katalog') {
+                const { data: cats } = await sb.from('brv_rev_kategori').select('*').order('urutan', { ascending: true });
+                const selectEl = document.getElementById('katalog-kategori-select');
+                if (selectEl) {
+                    selectEl.innerHTML = cats ? cats.map(c => `<option value="${c.kode_filter}">${c.nama}</option>`).join('') : '<option value="">Tidak ada kategori</option>';
+                }
+            }
+
+            if (id) await fillModalData(type, id);
+            lucide.createIcons();
+        }
+
+        async function fillModalData(type, id) {
+            const tableMap = {
+                'trustbar': 'brv_rev_trust_bar',
+                'usp': 'brv_rev_usp_cards',
+                'harga': 'brv_rev_harga_paket',
+                'katalog': 'brv_rev_katalog',
+                'kategori': 'brv_rev_kategori',
+                'testimonial': 'brv_rev_testimonials',
+                'faq': 'brv_rev_faq',
+                'proses': 'brv_rev_proses_order'
+            };
+            const { data } = await sb.from(tableMap[type]).select('*').eq('id', id).single();
+            if (data) {
+                const form = document.getElementById('modal-form');
+                Object.keys(data).forEach(key => {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) input.value = data[key];
+                    if (key === 'fitur_list' && data[key]) {
+                        const area = form.querySelector('[name="fitur_list_raw"]');
+                        if (area) area.value = data[key].join('\n');
+                    }
+                    if ((key === 'image_url' || key === 'avatar_url') && data[key]) {
+                        document.getElementById('preview').src = data[key];
+                        document.getElementById('preview').style.display = 'block';
+                    }
+                });
+            }
+        }
+
+        document.getElementById('modal-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const type = e.target.getAttribute('data-type');
+            const id = document.getElementById('modal-id').value;
+            const tableMap = {
+                'trustbar': 'brv_rev_trust_bar',
+                'usp': 'brv_rev_usp_cards', 'harga': 'brv_rev_harga_paket',
+                'katalog': 'brv_rev_katalog', 'carousel': 'brv_rev_carousel',
+                'kategori': 'brv_rev_kategori',
+                'testimonial': 'brv_rev_testimonials', 'faq': 'brv_rev_faq',
+                'proses': 'brv_rev_proses_order'
+            };
+            const bucketMap = { 'katalog': 'braveline-katalog', 'carousel': 'braveline-carousel', 'testimonial': 'braveline-avatar' };
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerText = "SEDANG MENYIMPAN...";
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                if (type === 'harga' && data.fitur_list_raw) {
+                    data.fitur_list = data.fitur_list_raw.split('\n').filter(l => l.trim() !== '');
+                    delete data.fitur_list_raw;
+                }
+
+                const fileInp = document.getElementById('file-inp');
+                if (fileInp && fileInp.files[0]) {
+                    const { data: uploadData, error: upErr } = await sb.storage.from(bucketMap[type]).upload('', fileInp.files[0]);
+                    if (upErr) throw upErr;
+                    const url = uploadData.publicUrl;
+                    if (type === 'testimonial') data.avatar_url = url;
+                    else data.image_url = url;
+                }
+
+                let res;
+                if (id) res = await sb.from(tableMap[type]).update(data).eq('id', id);
+                else res = await sb.from(tableMap[type]).insert([data]);
+
+                if (!res.error) {
+                    showToast("Selesai!");
+                    closeModal();
+                    if (type === 'trustbar') loadTrustBar();
+                    if (type === 'usp') loadUSP();
+                    if (type === 'harga') loadHarga();
+                    if (type === 'katalog') loadKatalog();
+                    if (type === 'kategori') loadKategori();
+                    if (type === 'carousel') loadCarousel();
+                    if (type === 'testimonial') loadTestimonial();
+                    if (type === 'faq') loadFAQ();
+                    if (type === 'proses') loadProses();
+                } else throw res.error;
+            } catch (err) { alert("Gagal: " + err.message); }
+            finally { btn.innerText = "SIMPAN DATA"; btn.disabled = false; }
+        };
+
+        async function deleteItem(type, id) {
+            if (!confirm("Hapus data ini?")) return;
+            const tableMap = {
+                'trustbar': 'brv_rev_trust_bar',
+                'usp': 'brv_rev_usp_cards', 'harga': 'brv_rev_harga_paket',
+                'katalog': 'brv_rev_katalog', 'carousel': 'brv_rev_carousel',
+                'kategori': 'brv_rev_kategori',
+                'testimonial': 'brv_rev_testimonials', 'faq': 'brv_rev_faq',
+                'proses': 'brv_rev_proses_order'
+            };
+            const { error } = await sb.from(tableMap[type]).delete().eq('id', id);
+            if (!error) {
+                showToast("Berhasil Dihapus");
+                if (type === 'trustbar') loadTrustBar();
+                if (type === 'usp') loadUSP();
+                if (type === 'harga') loadHarga();
+                if (type === 'katalog') loadKatalog();
+                if (type === 'kategori') loadKategori();
+                if (type === 'carousel') loadCarousel();
+                if (type === 'testimonial') loadTestimonial();
+                if (type === 'faq') loadFAQ();
+                if (type === 'proses') loadProses();
+            }
+        }
+
+        async function saveHeroData() {
+            const inputs = document.querySelectorAll('#sec-hero [data-key]');
+            const updates = Array.from(inputs).map(inp => ({ key: inp.getAttribute('data-key'), value: inp.value }));
+            const { error } = await sb.from('brv_rev_hero').upsert(updates, { onConflict: 'key' });
+            if (!error) showToast("Hero Section Updated!");
+            else alert("Error: " + error.message);
+        }
+
+        async function saveFooterData() {
+            const inputs = document.querySelectorAll('#sec-footer [data-key]');
+            const updates = Array.from(inputs).map(inp => ({ key: inp.getAttribute('data-key'), value: inp.value }));
+            const { error } = await sb.from('brv_rev_site_settings').upsert(updates, { onConflict: 'key' });
+            if (!error) showToast("Footer Info Updated!");
+            else alert("Error: " + error.message);
+        }
+
+        async function saveSectionTitles() {
+            const inputs = document.querySelectorAll('#sec-titles [data-key]');
+            const updates = Array.from(inputs).map(inp => ({ key: inp.getAttribute('data-key'), value: inp.value }));
+            const { error } = await sb.from('brv_rev_site_settings').upsert(updates, { onConflict: 'key' });
+            if (!error) showToast("Judul Seksi Berhasil Disimpan!");
+            else alert("Error: " + error.message);
+        }
+
+        async function loadRegionalData() {
+            const keys = ['regional_badge', 'regional_title1', 'regional_title2', 'regional_desc', 'regional_bdg_label', 'regional_bdg_phone', 'regional_bdg_wa', 'regional_kal_label', 'regional_kal_phone', 'regional_kal_wa', 'regional_footnote'];
+            const { data } = await sb.from('brv_rev_site_settings').select('key, value').in('key', keys);
+            if (data) {
+                data.forEach(item => {
+                    const el = document.getElementById(item.key);
+                    if (el) el.value = item.value || '';
+                });
+            }
+        }
+
+        async function saveRegionalData() {
+            const inputs = document.querySelectorAll('#sec-regional [data-key]');
+            const updates = Array.from(inputs).map(inp => ({ key: inp.getAttribute('data-key'), value: inp.value }));
+            const { error } = await sb.from('brv_rev_site_settings').upsert(updates, { onConflict: 'key' });
+            if (!error) showToast("Regional Section Updated!");
+            else alert("Error: " + error.message);
+        }
+
+        async function saveGlobalSettings() {
+            const inputs = document.querySelectorAll('#sec-settings [data-key]');
+            const updates = Array.from(inputs).map(inp => ({ key: inp.getAttribute('data-key'), value: inp.value }));
+            const { error } = await sb.from('brv_rev_site_settings').upsert(updates, { onConflict: 'key' });
+            if (!error) showToast("Global Settings Updated!");
+            else alert("Error: " + error.message);
+        }
+
+        async function loadCountdown() {
+            const { data } = await sb.from('brv_rev_countdown').select('*').limit(1).single();
+            if (data) {
+                document.getElementById('cd-label-inp').value = data.label || '';
+                if (data.end_date) {
+                    const d = new Date(data.end_date);
+                    // Adjust to local datetime-local format (YYYY-MM-DDThh:mm)
+                    const offset = d.getTimezoneOffset() * 60000;
+                    const localISO = new Date(d.getTime() - offset).toISOString().slice(0, 16);
+                    document.getElementById('cd-end-inp').value = localISO;
+                }
+                document.getElementById('cd-show-inp').value = data.show ? "true" : "false";
+            }
+        }
+
+        async function saveCountdown() {
+            const data = {
+                label: document.getElementById('cd-label-inp').value,
+                end_date: document.getElementById('cd-end-inp').value,
+                show: document.getElementById('cd-show-inp').value === "true"
+            };
+            const { error } = await sb.from('brv_rev_countdown').upsert({ id: '00000000-0000-0000-0000-000000000001', ...data }, { onConflict: 'id' });
+            if (!error) showToast("Countdown Saved!");
+            else alert("Error: " + error.message);
+        }
+
+        function previewImg(inp) {
+            const preview = document.getElementById('preview');
+            const status = document.getElementById('upload-status');
+            if (inp.files && inp.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    status.innerText = "Foto terpilih: " + inp.files[0].name;
+                };
+                reader.readAsDataURL(inp.files[0]);
+            }
+        }
+
+        async function editItem(type, id) { openModal(type, id); }
+
+        function closeModal() { document.getElementById('crud-modal').classList.add('hidden'); }
+
+        async function changeDashboardPassword() {
+            const newPass = document.getElementById('new-password').value;
+            if (newPass.length < 4) return alert("Password minimal 4 karakter.");
+
+            const { error } = await sb.rpc('update_admin_password', { new_password: newPass });
+            if (!error) {
+                showToast("Password Berhasil Diubah!");
+                document.getElementById('new-password').value = '';
+            } else {
+                alert("Gagal: " + error.message);
+            }
+        }
+
+        function previewAsset(inp, previewId, statusId) {
+            const preview = document.getElementById(previewId);
+            const status = document.getElementById(statusId);
+            if (inp.files && inp.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    status.innerText = inp.files[0].name;
+                };
+                reader.readAsDataURL(inp.files[0]);
+            }
+        }
+
+        async function uploadAsset(inputId, settingKey) {
+            const inp = document.getElementById(inputId);
+            if (!inp || !inp.files[0]) return alert('Pilih file terlebih dahulu.');
+            const btn = inp.parentElement.nextElementSibling;
+            btn.innerText = 'MENGUPLOAD...';
+            btn.disabled = true;
+            try {
+                const file = inp.files[0];
+                const ext = file.name.split('.').pop();
+                const fileName = `${settingKey}_${Date.now()}.${ext}`;
+                const { error: upErr } = await sb.storage.from('braveline-avatar').upload(fileName, file, { upsert: true });
+                if (upErr) throw upErr;
+                const { data: urlData } = sb.storage.from('braveline-avatar').getPublicUrl(fileName);
+                const publicUrl = urlData.publicUrl;
+                const { error: saveErr } = await sb.from('brv_rev_site_settings').upsert({ key: settingKey, value: publicUrl }, { onConflict: 'key' });
+                if (saveErr) throw saveErr;
+                showToast(`${settingKey === 'site_logo_url' ? 'Logo' : 'Favicon'} berhasil diupload!`);
+            } catch (err) {
+                alert('Gagal upload: ' + err.message);
+            } finally {
+                btn.innerText = inputId === 'logo-inp' ? 'UPLOAD LOGO' : 'UPLOAD FAVICON';
+                btn.disabled = false;
+            }
+        }
+
+        // UI UTILITY
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Check already logged in
+        if (localStorage.getItem('brv_rev_auth') === 'true') {
+            confirmAuth();
+        }
+
+    </script>
+</body>
+
+</html>

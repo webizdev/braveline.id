@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Database MySQL
+  db:
+    image: mysql:8.0
+    container_name: braveline_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: alilogis_braveline
+      MYSQL_USER: alilogis_braveline
+      MYSQL_PASSWORD: eGQG2xvzNsDKbXYFamVT
+      MYSQL_ROOT_PASSWORD: root_password_braveline
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: braveline_pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - ARBITRARY=1
+    depends_on:
+      - db
+
+  # Web Server (PHP + Apache)
+  web:
+    build: .
+    container_name: braveline_web
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=braveline_db
+      - DB_USER=user_braveline
+      - DB_PASS=password_braveline
+    depends_on:
+      - db
+
+volumes:
+  db_data:
