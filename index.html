@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- Meta Pixel Code -->
+    <!-- Meta Pixel Code (Dynamic Wrapper) -->
     <script>
-    var fb_pixel_id = '1615673449339794'; // Default ID
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -12,12 +11,9 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', fb_pixel_id);
-    fbq('track', 'PageView');
+    // Initialization will happen dynamically below
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1615673449339794&ev=PageView&noscript=1"
-    /></noscript>
+    <noscript id="dyn_pixel_noscript"></noscript>
     <!-- End Meta Pixel Code -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1311,11 +1307,11 @@ Chat WhatsApp Sekarang — GRATIS
       // 1. Apply Site Settings
       let waNumber = '6285199227070';
       let waMessage = 'Halo Braveline, saya mau konsultasi jersey custom';
+      let activePixelId = '1615673449339794'; // Fallback
+
       if (settingsData) {
         settingsData.forEach(item => {
-          if (item.key === 'fb_pixel_id' && item.value) {
-            fb_pixel_id = item.value;
-          }
+          if (item.key === 'fb_pixel_id' && item.value) activePixelId = item.value;
           if (item.key === 'wa_number' && item.value) waNumber = item.value.replace(/\D/g, '');
           if (item.key === 'wa_default_message' && item.value) waMessage = encodeURIComponent(item.value);
           
@@ -1437,6 +1433,16 @@ Chat WhatsApp Sekarang — GRATIS
         if (footerWaBtnLink) footerWaBtnLink.href = waLink;
         const footerWaBtnText = document.getElementById('dyn_footer_wa_btn_text');
         if (footerWaBtnText) footerWaBtnText.textContent = `Chat WA — ${waNumber.replace(/(\d{2})(\d{3})(\d{4})(\d{4})/, '$1-$2-$3-$4')}`;
+
+        // FINAL TRIGGER: Initialize Pixel with dynamic ID
+        if (typeof fbq === 'function') {
+            fbq('init', activePixelId);
+            fbq('track', 'PageView');
+            // Update Noscript too
+            const ns = document.getElementById('dyn_pixel_noscript');
+            if (ns) ns.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${activePixelId}&ev=PageView&noscript=1" />`;
+            console.log('Meta Pixel Loaded with ID:', activePixelId);
+        }
       }
 
       // 1.1 Apply Countdown
