@@ -1114,7 +1114,7 @@
           limit: () => chain,
           single: () => { query.params.single = true; return chain; },
           then: async (resolve) => {
-            const url = `http://localhost:8080/api.php?action=get&table=${query.table}` + 
+            const url = `api.php?action=get&table=${query.table}` + 
                         (query.params.id ? `&id=${query.params.id}` : '') +
                         (query.params.order ? `&order=${query.params.order}&dir=${query.params.dir}` : '') +
                         (query.params.single ? `&single=1` : '');
@@ -1123,7 +1123,7 @@
             resolve({ data, error: data.error || null });
           },
           insert: async (rows) => {
-            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}`, {
+            const res = await fetch(`api.php?table=${query.table}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(rows)
@@ -1132,7 +1132,7 @@
             return { data, error: data.error || null };
           },
           upsert: async (rows) => {
-            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}`, {
+            const res = await fetch(`api.php?table=${query.table}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(rows)
@@ -1141,7 +1141,7 @@
             return { data, error: data.error || null };
           },
           update: async (row) => {
-            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}&id=${query.params.id}`, {
+            const res = await fetch(`api.php?table=${query.table}&id=${query.params.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(row)
@@ -1150,7 +1150,7 @@
             return { data, error: data.error || null };
           },
           delete: async () => {
-            const res = await fetch(`http://localhost:8080/api.php?table=${query.table}&id=${query.params.id}`, {
+            const res = await fetch(`api.php?table=${query.table}&id=${query.params.id}`, {
                 method: 'DELETE'
             });
             const data = await res.json();
@@ -1160,7 +1160,7 @@
         return chain;
       },
       rpc: async (fn, params) => {
-        const res = await fetch(`http://localhost:8080/api.php?action=rpc&fn=${fn}`, {
+        const res = await fetch(`api.php?action=rpc&fn=${fn}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(params)

@@ -1260,7 +1260,7 @@ Chat WhatsApp Sekarang — GRATIS
           limit: () => chain,
           single: () => { query.params.single = true; return chain; },
           then: async (resolve) => {
-            const url = `http://localhost:8080/` + buildUrl(query);
+            const url = buildUrl(query);
             const res = await fetch(url);
             const data = await res.json();
             resolve({ data, error: data.error || null });
