@@ -894,22 +894,33 @@
                 </div>
                 <div class="grid">
                     <div class="card">
+                        <div class="form-group"><label>Judul Seksi Trust Bar</label><input type="text" data-key="section_trust_title" placeholder="DIPERCAYA OLEH TIM & KOMUNITAS"></div>
+                        <div class="form-group"><label>Judul Seksi Katalog</label><input type="text" data-key="section_katalog_title" placeholder="KATALOG JERSEY TERBARU"></div>
+                        <div class="form-group"><label>Sub Judul Seksi Katalog</label><textarea data-key="section_katalog_subtitle" rows="2" placeholder="Pilihan desain jersey eksklusif yang siap diproduksi untuk tim Anda."></textarea></div>
+                        <div class="form-group"><label>Judul Seksi Testimonial</label><input type="text" data-key="section_testimonials_title" placeholder="APA KATA MEREKA?"></div>
+                        <div class="form-group"><label>Judul Seksi Harga</label><input type="text" data-key="section_harga_title" placeholder="PILIHAN HARGA PAKET"></div>
+                        <div class="form-group"><label>Judul Seksi Proses Order</label><input type="text" data-key="section_order_title" placeholder="PROSES PEMESANAN"></div>
+                        <div class="form-group"><label>Judul Seksi FAQ</label><input type="text" data-key="section_faq_title" placeholder="TANYA JAWAB (FAQ)"></div>
+                        <div class="form-group"><label>Teks Promo CTA Bawah</label><textarea data-key="cta_final_text" rows="2" placeholder="Tunggu apa lagi? Wujudkan jersey impian tim Anda sekarang juga!"></textarea></div>
+                        <div class="form-group"><label>Label Tombol CTA</label><input type="text" data-key="cta_final_btn" placeholder="KONSULTASI DESAIN SEKARANG"></div>
+                    </div>
+                    <div class="card">
                         <h3>Seksi Keunggulan (USP)</h3>
                         <div class="form-group"><label>Judul Utama</label><input type="text"
-                                data-key="section_usp_title"></div>
+                                data-key="section_usp_title" placeholder="KENAPA MEMILIH KAMI?"></div>
                         <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_usp_sub"
-                                rows="2"></textarea></div>
+                                rows="2" placeholder="Kualitas terbaik dengan harga yang bersaing di kelasnya."></textarea></div>
                     </div>
                     <div class="card">
                         <h3>Seksi Paket Harga</h3>
                         <div class="form-group"><label>Judul Utama</label><input type="text"
-                                data-key="section_harga_title"></div>
+                                data-key="section_harga_title" placeholder="PILIHAN PAKET"></div>
                         <div class="form-group"><label>Sub-Judul</label><textarea data-key="section_harga_sub"
-                                rows="2"></textarea></div>
+                                rows="2" placeholder="Pilih paket yang sesuai dengan budget dan kebutuhan tim Anda."></textarea></div>
                         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border)">
                             <label style="color: var(--secondary)">Promo Harga (Kecil di bawah judul)</label>
                             <div class="form-group"><label>Judul Promo</label><input type="text"
-                                    data-key="harga_promo_title"></div>
+                                    data-key="harga_promo_title" placeholder="DISKON KHUSUS BULAN INI"></div>
                             <div class="form-group"><label>Deskripsi Promo</label><input type="text"
                                     data-key="harga_promo_desc"></div>
                         </div>
@@ -961,32 +972,19 @@
                 <div class="header">
                     <h1>Footer & Info Kontak</h1>
                 </div>
-                <div class="card">
-                    <div class="form-group"><label>Tagline Footer (Di bawah logo)</label><input type="text"
-                            id="footer_tagline" data-key="footer_tagline"></div>
-                    <div class="form-group"><label>Deskripsi Singkat Footer</label><textarea id="footer_description"
-                            data-key="footer_description" rows="3"></textarea></div>
-                    <div class="form-group"><label>Alamat Lengkap (Tampil di footer)</label><textarea
-                            id="footer_address" data-key="footer_address" rows="3"></textarea></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Nomor WhatsApp (Tampilan)</label><input type="text"
-                                id="footer_phone" data-key="footer_phone" placeholder="0812-3456-7890"></div>
-                        <div class="form-group"><label>Jam Operasional</label><input type="text" id="footer_jam"
-                                data-key="footer_jam" placeholder="Senin - Sabtu: 09:00 - 18:00"></div>
+                    <div class="card">
+                        <div class="form-group"><label>Tagline Footer (Di bawah logo)</label><input type="text" id="footer_tagline" data-key="footer_tagline" placeholder="Sentra produksi kaos olahraga cetakan personal bermutu."></div>
+                        <div class="form-group"><label>Deskripsi Singkat Footer</label><textarea id="footer_description" data-key="footer_description" rows="3" placeholder="Spesialis pembuatan jersey olahraga custom dengan kualitas printing premium."></textarea></div>
+                        <div class="form-group"><label>Alamat Lengkap (Tampil di footer)</label><textarea id="footer_address" data-key="footer_address" rows="3" placeholder="Griya Alam Sentosa Blok A6 No 20, Cileungsi, Bogor, Jawa Barat"></textarea></div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Nomor WhatsApp (Tampilan)</label><input type="text" id="footer_phone" data-key="footer_phone" placeholder="0851-9922-7070"></div>
+                            <div class="form-group"><label>Jam Operasional</label><input type="text" id="footer_jam" data-key="footer_jam" placeholder="Produksi & Admin: Senin - Sabtu (08.00 - 17.00)"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Instagram (Username)</label><input type="text" id="footer_ig" data-key="footer_ig" placeholder="bravelineapparel"></div>
+                            <div class="form-group"><label>TikTok (Username)</label><input type="text" id="footer_tiktok" data-key="footer_tiktok" placeholder="bravelineapparel"></div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Teks Jam Operasional Footer (Detail)</label>
-                        <input type="text" id="footer_operational_hours" data-key="footer_operational_hours"
-                            placeholder="Produksi & Admin: Senin - Sabtu (08.00 - 17.00)">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Instagram URL</label><input type="text" id="footer_ig"
-                                data-key="footer_ig"></div>
-                        <div class="form-group"><label>TikTok URL</label><input type="text" id="footer_tiktok"
-                                data-key="footer_tiktok"></div>
-                    </div>
-                    <button class="btn" onclick="saveFooterData()">SIMPAN INFO FOOTER</button>
-                </div>
             </section>
 
 
