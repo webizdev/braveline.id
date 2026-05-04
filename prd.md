@@ -1,8 +1,8 @@
-# PRD — Braveline Admin Dashboard
+# PRD – Braveline Admin Dashboard
 **Versi:** 1.0.2  
 **Tanggal:** 18 Maret 2026  
 **Project:** braveline.com  
-**Database:** Supabase — Project **`mix data`** (`pgltsyrtduvddpcdlchk`, Singapore)  
+**Database:** Supabase – Project **`mix data`** (`pgltsyrtduvddpcdlchk`, Singapore)  
 **Stack:** HTML5 + Vanilla CSS + JavaScript (Supabase CDN)
 
 ---

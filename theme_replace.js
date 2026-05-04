@@ -29,7 +29,7 @@ html = html.replace(
 `.btn-wa svg, .btn-cta-wa svg { width: 24px; height: 24px; fill: white; flex-shrink: 0; }`
 );
 
-// The Final CTA section: "Siap Pesan Jersey Custom?" - background in image is solid cyan/blue
+// The Final CTA section: \"Siap Pesan Jersey Custom?\" - background in image is solid cyan/blue
 html = html.replace(
 `  .final-cta {
     background: var(--biru);
