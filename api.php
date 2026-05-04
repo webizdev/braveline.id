@@ -12,30 +12,30 @@ $pass = 'eGQG2xvzNsDKbXYFamVT';
 $charset = 'utf8mb4';
 
 try {
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $dsn = \"mysql:host=$host;dbname=$db;charset=$charset\";
     $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-} catch (\PDOException $e) {
-    header("Content-Type: text/html");
-    die("<h2 style='color:red'>Gagal Menghubungkan ke Database Hosting!</h2>
-         <p>Error: " . $e->getMessage() . "</p>
-         <p><b>Saran:</b> Pastikan Username, Password, dan Nama Database di file <code>api.php</code> sudah sesuai dengan yang ada di cPanel/Hosting Anda.</p>");
+} catch (\\PDOException $e) {
+    header(\"Content-Type: text/html\");
+    die(\"<h2 style='color:red'>Gagal Menghubungkan ke Database Hosting!</h2>
+         <p>Error: \" . $e->getMessage() . \"</p>
+         <p><b>Saran:</b> Pastikan Username, Password, dan Nama Database di file <code>api.php</code> sudah sesuai dengan yang ada di cPanel/Hosting Anda.</p>\");
 }
 
 // AUTO-REPAIR: Ensure Admin Table exists
 try {
-    $pdo->exec("CREATE TABLE IF NOT EXISTS brv_rev_admin (
+    $pdo->exec(\"CREATE TABLE IF NOT EXISTS brv_rev_admin (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(100) UNIQUE,
         password_hash VARCHAR(255)
-    )");
+    )\");
     
     // Check if any admin exists, if not, create default
-    $count = $pdo->query("SELECT COUNT(*) FROM brv_rev_admin")->fetchColumn();
+    $count = $pdo->query(\"SELECT COUNT(*) FROM brv_rev_admin\")->fetchColumn();
     if ($count == 0) {
-        $pdo->prepare("INSERT INTO brv_rev_admin (username, password_hash) VALUES ('admin', 'admin123')")->execute();
+        $pdo->prepare(\"INSERT INTO brv_rev_admin (username, password_hash) VALUES ('admin', 'admin123')\")->execute();
     }
 } catch (Exception $e) {
     // Silently ignore or log if table already exists or other issues
@@ -54,7 +54,7 @@ if ($action === 'rpc') {
         $pass_check = $input['password_to_check'] ?? '';
         
         try {
-            $stmt = $pdo->prepare("SELECT * FROM brv_rev_admin WHERE username = 'admin' LIMIT 1");
+            $stmt = $pdo->prepare(\"SELECT * FROM brv_rev_admin WHERE username = 'admin' LIMIT 1\");
             $stmt->execute();
             $admin = $stmt->fetch();
             
@@ -71,7 +71,7 @@ if ($action === 'rpc') {
 
     if ($fn === 'update_admin_password') {
         $new_pass = $input['new_password'] ?? '';
-        $stmt = $pdo->prepare("UPDATE brv_rev_admin SET password_hash = ? WHERE username = 'admin'");
+        $stmt = $pdo->prepare(\"UPDATE brv_rev_admin SET password_hash = ? WHERE username = 'admin'\");
         $stmt->execute([$new_pass]);
         echo json_encode(['data' => 'success']);
         exit;
@@ -85,18 +85,18 @@ if ($action === 'upload') {
         exit;
     }
     
-    $target_dir = "uploads/";
+    $target_dir = \"uploads/\";
     if (!file_exists($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
     
-    $file_ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-    $file_name = time() . "_" . uniqid() . "." . $file_ext;
+    $file_ext = pathinfo($_FILES[\"file\"][\"name\"], PATHINFO_EXTENSION);
+    $file_name = time() . \"_\" . uniqid() . \".\" . $file_ext;
     $target_file = $target_dir . $file_name;
     
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-        $url = $protocol . "://" . $_SERVER['HTTP_HOST'] . "/" . $target_file;
+    if (move_uploaded_file($_FILES[\"file\"][\"tmp_name\"], $target_file)) {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? \"https\" : \"http\";
+        $url = $protocol . \"://\" . $_SERVER['HTTP_HOST'] . \"/\" . $target_file;
         echo json_encode(['publicUrl' => $url]);
     } else {
         echo json_encode(['error' => 'Failed to move uploaded file']);
@@ -111,30 +111,30 @@ if ($method === 'GET') {
         exit;
     }
     
-    $query = "SELECT * FROM `$table`";
+    $query = \"SELECT * FROM `$table`\";
     $where_clauses = [];
     $params = [];
     
     if (isset($_GET['key'])) {
-        $where_clauses[] = "`key` = ?";
+        $where_clauses[] = \"`key` = ?\";
         $params[] = $_GET['key'];
     }
     if (isset($_GET['id'])) {
-        $where_clauses[] = "`id` = ?";
+        $where_clauses[] = \"`id` = ?\";
         $params[] = $_GET['id'];
     }
     if (isset($_GET['aktif'])) {
-        $where_clauses[] = "`aktif` = 1";
+        $where_clauses[] = \"`aktif` = 1\";
     }
     
     if (!empty($where_clauses)) {
-        $query .= " WHERE " . implode(" AND ", $where_clauses);
+        $query .= \" WHERE \" . implode(\" AND \", $where_clauses);
     }
     
     if (isset($_GET['order'])) {
         $order = preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['order']);
         $dir = (strtoupper($_GET['dir'] ?? 'ASC') === 'DESC') ? 'DESC' : 'ASC';
-        $query .= " ORDER BY `$order` $dir";
+        $query .= \" ORDER BY `$order` $dir\";
     }
     
     try {
@@ -169,19 +169,19 @@ elseif ($method === 'POST') {
     try {
         foreach ($rows as $data) {
             $keys = array_keys($data);
-            $fields = implode("`, `", $keys);
-            $placeholders = implode(", ", array_fill(0, count($keys), "?"));
+            $fields = implode(\"`, `\", $keys);
+            $placeholders = implode(\", \", array_fill(0, count($keys), \"?\"));
             
             foreach ($data as $k => $v) {
                 if (is_array($v)) $data[$k] = json_encode($v);
             }
             
-            $sql = "INSERT INTO `$table` (`$fields`) VALUES ($placeholders) ON DUPLICATE KEY UPDATE ";
+            $sql = \"INSERT INTO `$table` (`$fields`) VALUES ($placeholders) ON DUPLICATE KEY UPDATE \";
             $updates = [];
             foreach ($keys as $k) {
-                $updates[] = "`$k` = VALUES(`$k`)";
+                $updates[] = \"`$k` = VALUES(`$k`)\";
             }
-            $sql .= implode(", ", $updates);
+            $sql .= implode(\", \", $updates);
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute(array_values($data));
@@ -194,7 +194,7 @@ elseif ($method === 'POST') {
 elseif ($method === 'DELETE') {
     if (!$table || !isset($_GET['id'])) exit;
     try {
-        $stmt = $pdo->prepare("DELETE FROM `$table` WHERE id = ?");
+        $stmt = $pdo->prepare(\"DELETE FROM `$table` WHERE id = ?\");
         $stmt->execute([$_GET['id']]);
         echo json_encode(['data' => 'success']);
     } catch (Exception $e) {
