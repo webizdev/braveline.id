@@ -12,7 +12,7 @@ services:
       MYSQL_PASSWORD: eGQG2xvzNsDKbXYFamVT
       MYSQL_ROOT_PASSWORD: root_password_braveline
     ports:
-      - "3307:3306"
+      - \"3307:3306\"
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -22,7 +22,7 @@ services:
     container_name: braveline_pma
     restart: always
     ports:
-      - "8081:80"
+      - \"8081:80\"
     environment:
       - PMA_HOST=db
       - ARBITRARY=1
@@ -35,7 +35,7 @@ services:
     container_name: braveline_web
     restart: always
     ports:
-      - "8080:80"
+      - \"8080:80\"
     volumes:
       - .:/var/www/html
     environment:
